@@ -1,0 +1,57 @@
+[2, 4, 8, 16, 32, 64, 128, 256, 512]
+[15, 101, 317, 985, 3325, 12081, 45957, 179225, 707885]
+
+
+def subM(
+    matrix, 
+    rowStartIdx, rowEndIdx,
+    colStartIdx, colEndIdx):
+
+    result = [
+        x[ colStartIdx : colEndIdx ]
+        for x in matrix[ rowStartIdx : rowEndIdx ]
+    ]
+
+    return result
+
+
+
+
+x=range(2, len(A) )  # valores de n a probar
+y=[]
+y2=[]  #a qui guardaremso el resultado de la  funcion g(n) 
+        #evaluado en los valores en el arreglo x
+
+
+def c1g(x):   #funcion propuesta
+    a=10*x*x+100
+    return a
+
+
+  
+  
+for i in range(2,len(A)):
+    y.append(0); 
+    subA = subM(A,
+                    0, i, 
+                    0, i)
+    subB = subM(B,
+                    0, i, 
+                    0, i)
+    print(subA)
+    print(subB)
+    print(strassen(subA,subB) )
+   
+   
+    
+
+
+
+
+
+print(len(x))
+print(len(y))
+
+plt.ion()
+plt.plot(x,y,'b.')   #graficamos
+

@@ -1,0 +1,259 @@
+\documentclass[12pt,twoside]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage[breaklinks=true]{hyperref}
+\usepackage{amsmath, amssymb}
+\usepackage{amsmath}
+\usepackage[active]{srcltx}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{amscd}
+\usepackage{makeidx}
+\usepackage{amsthm}
+\usepackage{algpseudocode}
+\usepackage{listings}
+\usepackage{minted}
+\usepackage{multirow}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\renewcommand{\baselinestretch}{1}
+\setcounter{page}{1}
+\setlength{\textheight}{21.6cm}
+\setlength{\textwidth}{14cm}
+\setlength{\oddsidemargin}{1cm}
+\setlength{\evensidemargin}{1cm}
+\pagestyle{myheadings}
+\thispagestyle{empty}
+\markboth{\small{Pr\'actica 7. Victor Hugo Magaña Bautista, Alberto Aacini Osornio Zambrano.}}{\small{.}}
+\date{}
+\begin{document}
+\centerline{\bf An\'alisis de Algoritmos, Sem: 2020-1, 3CV2, Práctica 16-10-19}
+\centerline{}
+\centerline{}
+\begin{center}
+\Large{\textsc{Pr\'actica 8: Parentizacion optima}}
+\end{center}
+\centerline{}
+\centerline{\bf {Victor Hugo Magaña Bautista, Alberto Aacini Osornio Zambrano.}}
+\centerline{}
+\centerline{Escuela Superior de Cómputo}
+\centerline{Instituto Politécnico Nacional, México}
+\centerline{$hugomagana01234@gmail.com, aaacini@gmail.com$}
+\newtheorem{Theorem}{\quad Theorem}[section]
+\newtheorem{Definition}[Theorem]{\quad Definition}
+\newtheorem{Corollary}[Theorem]{\quad Corollary}
+\newtheorem{Lemma}[Theorem]{\quad Lemma}
+\newtheorem{Example}[Theorem]{\quad Example}
+\bigskip
+\textbf{Resumen:} El presente trabajo tiene como objetivo el estudio del paradigma de divide y vencerás mediante la ejemplificación del algoritmo de Strassen, además de calcular el orden de complejidad de este tipo de algoritmos de manera experimental.
+\section{Introducción}
+     El análisis de algoritmos estima el consumo de recursos de un algoritmo.  Esto nos permite comparar los costos relativos de dos o más algoritmos para resolver el mismo problema. \\ \\
+     Para continuar, el término divide y vencerás hace referencia a uno de los más importantes paradigmas de diseño algorítmico. El método está basado en la resolución recursiva de un problema dividiéndolo en dos o más subproblemas de igual tipo o similar. El proceso continúa hasta que éstos llegan a ser lo suficientemente sencillos como para que se resuelvan directamente. Al final, las soluciones a cada uno de los subproblemas se combinan para dar una solución al problema original.
+     \\ \\
+     En los casos que nos compete calcularemos el tiempo de procesamiento de los algoritmos implementados mediante el paradigma de divide y vencerás de manera experimental, para tal caso se utilizará método de línea por línea.Con la finalidad de conocer el algoritmo óptimo para la resolución del problema en cuestión.
+     
+\section{Conceptos básicos}
+\subsection{Programacion Dinamica}
+Una forma razonable y comúnmente empleada de resolver un problema es definir o caracterizar su solución en términos de las soluciones de subproblemas del mismo. Estaidea, cuando se emplea recursivamente, proporciona métodos eficientes de solución
+para problemas en los que los subproblemas son versiones mas pequeñas del problema original.
+
+\\
+
+Una técnica de diseño de algoritmos, que sigue esta idea, es la conocida como divide
+y vencerás que hemos estudiado en temas anteriores. Como allí se explicó, consiste
+en descomponer cada problema en un numero dado de subproblemas, resolver cada
+uno de ellos (quizás empleando el mismo método) y combinar estas soluciones
+parciales para obtener una solución global. Desde el punto de vista de la complejidad de
+los algoritmos que se obtienen por este procedimiento, lo mejor es que todos los
+subproblemas tengan dimensión similar y que la suma de estas sea lo menor posible. No
+obstante, en muchos casos, dado un problema de tamaño n solo puede obtenerse una
+caracterización efectiva de su solución en términos de la solución de los
+subproblemas de tamaño n-1 (n en total) lo que puede aplicarse recursivamente. En
+estos casos, la técnica conocida como Programación Dinámica (PD) proporciona
+algoritmos bastante eficientes. 
+
+
+
+
+
+
+\subsection{Numeros de catalan}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=.7]{prac8/1.png} %Escala y nombreimágen.png
+    \caption{Números de catalán}
+\end{figure}
+\noindent
+Los números de Catalán forman la sucesión cuyo término general es
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=.7]{prac8/2.png} %Escala y nombreimágen.png
+    \caption{Formula Números de catalan}
+    
+\end{figure}
+\endcentering
+\noindent
+Los primeros números de Catalan son:
+
+
+\framebox[15cm][c]{1, 1, 2, 5, 14, 42, 132, 429, 1430, 4862, 16796, 58786}
+
+\noindent
+Los números de Catalan satisfacen la siguiente relación de recurrencia:
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=.7]{prac8/3.png} %Escala y nombreimágen.png
+    \caption{Numeros de catalan en recurrencia}
+\end{figure}
+\noindent
+Asintóticamente, los números de Catalan crecen como:
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=.7]{prac8/4.png} %Escala y nombreimágen.png
+    \caption{Formula asintotica para los numeros de catalan}
+\end{figure}
+
+\noindent
+Como se muestra en la siguiente gráfica donde se muestra los números de catalan con la grafica de la funcion antes descrita
+
+ 
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=.7]{prac8/5.png} %Escala y nombreimágen.png
+    \caption{Formula asintotica para los numeros de catalan}
+\end{figure}
+
+\subsection{Algoritmos recursivos}
+Llamaremos algoritmos recursivos a aquellos que realizan llamadas recursivas para llegar al resultado, y algoritmos iterativos a aquellos que llegan a un resultado a través de una iteración mediante un ciclo definido o indefinido.
+
+Todo algoritmo recursivo puede expresarse como iterativo y viceversa. Sin embargo, según las condiciones del problema a resolver podrá ser preferible utilizar la solución recursiva o la iterativa.
+
+Una posible implementación iterativa de la función factorial vista anteriormente sería:
+
+\begin{minted}{python}
+
+def factorial(n):
+    """ Precondición: n entero >=0
+        Devuelve: n! """
+
+    fact = 1
+    for num in xrange(n, 1, -1):
+        fact *= num
+    return fact
+
+
+\end{minted}
+
+
+Se puede ver que en este caso no es necesario incluir un caso base, ya que el mismo ciclo incluye una condición de corte, pero que sí es necesario incluir un acumulador, que en el caso recursivo no era necesario.
+
+Por otro lado, si hiciéramos el seguimiento de esta función, como se hizo para la versión recursiva, veríamos que se trata de una única pila, en la cual se van modificando los valores de num y fact.
+
+Es por esto que las versiones recursivas de los algoritmos, en general, utilizan más memoria (la pila del estado de las funciones se guarda en memoria) pero suelen ser más elegantes.
+
+
+
+\subsection{Paradigma divide y vencerás}
+En las ciencias de la computación, el término divide y vencerás (DYV) hace referencia a uno de los más importantes paradigmas de diseño algorítmico. El método está basado en la resolución recursiva de un problema dividiéndolo en dos o más subproblemas de igual tipo o similar. El proceso continúa hasta que éstos llegan a ser lo suficientemente sencillos como para que se resuelvan directamente. Al final, las soluciones a cada uno de los subproblemas se combinan para dar una solución al problema original.
+\\ \\
+Esta técnica es la base de los algoritmos eficientes para casi cualquier tipo de problema como, por ejemplo, algoritmos de ordenamiento (quicksort, mergesort, entre muchos otros), multiplicar números grandes (Karatsuba), análisis sintácticos (análisis sintáctico top-down) y la transformada discreta de Fourier.
+\\ \\
+Por otra parte, analizar y diseñar algoritmos de DyV son tareas que lleva tiempo dominar. Al igual que en la inducción, a veces es necesario sustituir el problema original por uno más complejo para conseguir realizar la recursión, y no hay un método sistemático de generalización.
+\\ \\
+El nombre divide y vencerás también se aplica a veces a algoritmos que reducen cada problema a un único subproblema, como la búsqueda binaria para encontrar un elemento en una lista ordenada (o su equivalente en computación numérica, el algoritmo de bisección para búsqueda de raíces). Estos algoritmos pueden ser implementados más eficientemente que los algoritmos generales de “divide y vencerás”; en particular, si es usando una serie de recursiones que lo convierten en simples bucles. Bajo esta amplia definición, sin embargo, cada algoritmo que usa recursión o bucles puede ser tomado como un algoritmo de “divide y vencerás”. El nombre decrementa y vencerás ha sido propuesta para la subclase simple de problemas.
+\\ \\
+La corrección de un algoritmo de “divide y vencerás”, está habitualmente probada una inducción matemática, y su coste computacional se determina resolviendo relaciones de recurrencia.
+
+\subsubsection{Ejemplos de algoritmos que utilizan el paradigma divide y vencerás}
+\begin{itemize}
+    \item Búsqueda Binaria
+    \item MergeSort
+    \item QuickSort
+\end{itemize}
+
+\subsection{Matriz}
+\subsubsection{Definición}
+En matemática, una matriz es un arreglo bidimensional de números. Una matriz se representa por medio de una letra mayúscula (A,B, …) y sus elementos con la misma letra en minúscula (a,b, …), con un doble subíndice donde el primero indica la fila y el segundo la columna a la que pertenece.
+\begin{center}
+  \begin{figure}[H]
+    \centering
+    \includegraphics[scale=.5]{Matriz.png}%Escala y nombreimágen.png
+    \caption{Ejemplo de una matriz con sus respectivos elementos}
+    \label{hug1}
+\end{figure}
+\end{center}
+Los elementos individuales de una matriz {\displaystyle m} m x {\displaystyle n} n, se denotan a menudo por {\displaystyle a_{ij}} a_{ij}, donde el máximo valor de {\displaystyle i} i es {\displaystyle m} m, y el máximo valor de {\displaystyle j} j es {\displaystyle n} n.
+
+\subsubsection{Multiplicacion de Matrices}
+Sean ${\displaystyle A\in {\mathcal {M}}_{n\times m}(\mathbb {K} )} A\in {\mathcal  {M}}_{{n\times m}}({\mathbb  {K}})$ y ${\displaystyle B\in {\mathcal {M}}_{m\times p}(\mathbb {K} )} B\in {\mathcal  {M}}_{{m\times p}}({\mathbb  {K}}).$ Se define el producto de matrices como una función ${\displaystyle {\mathcal {M}}_{n\times m}(\mathbb {K} )\times {\mathcal {M}}_{m\times p}(\mathbb {K} )\longrightarrow {\mathcal {M}}_{n\times p}(\mathbb {K} )} {\mathcal  {M}}_{{n\times m}}({\mathbb  {K}})\times {\mathcal  {M}}_{{m\times p}}({\mathbb  {K}})\longrightarrow {\mathcal  {M}}_{{n\times p}}({\mathbb  {K}})$ tal que ${\displaystyle (A,B)\mapsto C=AB} (A,B)\mapsto C=AB$\\
+\\\\
+\textbf{Complejidad de algunos algoritmos de multiplicación de matrices}
+\\\\
+El método clásico requiere n²(2n-1) operaciones aritméticas para multiplicar dos matrices (n x n). Strassen (1969) publicó un método que solo requería ${\displaystyle 4.7n^{2.81}} {\displaystyle 4.7n^{2.81}}$ operaciones. Se ha realizado mucho trabajo para  intentar reducir el exponente 2,81, actualmente el mejor tiempo conocido es ${\displaystyle O(n^{2.3737})}$operaciones (Virginia Vassilovska Williams).La mejor cota inferior conocida es ${\displaystyle 2n^{2}-1} {\displaystyle 2n^{2}-1}.$
+
+\section{Experimentación y resultados}
+
+\begin{minted}{python}
+
+def MatrixChainOrder(P)
+    n=p.length -1
+    for i = 1 to n 
+        m[i][i] =0
+    for l = 2 to n
+        for i =1 to n-l+1 
+          j=i+l-1
+          m[i][j]=∞
+          for k = i to j-1
+            q= m[i][k]+m[k+1][j]+P[i-1]P[k]P[j]
+            if q < m[i][j]
+                
+\end{minted}
+
+
+
+
+
+
+
+
+
+
+\section{Conclusiones}
+
+\subsection{\textbf{Conclusión general}}
+En esta practica estudiamos a fondo uno de los algoritmos para multiplicar matrices, en donde aprendimos a calcular su complejidad experimentalmente mediante el método de línea por línea.
+\\\\
+También, pudimos darnos cuenta que a veces el algoritmo óptimo para la resolución de un problema puede tener un rendimiento muy parecido a los algoritmos estándar para resolver el problema en cuestión, para el caso particular del algoritmo de Strassen el rendimiento de este algoritmo se empezaba a notar en matrices de dimensiones grandes, puesto que para matrices de dimensión pequeña el rendimiento era muy parecido.
+\\
+Por último, en esta práctica no tuvimos problemas tanto para implementa como para calcular el orden de complejidad de manera experimental, puesto que el tema lo hemos estudiado a fondo en clase.
+
+
+\subsection{\textbf{Conclusión Victor Hugo Magaña Bautista}}
+
+Para  empezar, en esta práctica pude profundizar sobre el paradigma de divide y vencerás, el cual establece que un problema principal puede dividirse en problemas más pequeños, los cuales tienen la característica que su solución es exactamente la misma que el problema principal, esto me parece muy útil en los casos en los que deseamos implementar una función recursiva, puesto que este paradigma nos facilita la identificación de los casos base y los casos recursivos.\\\\
+En términos generales el rendimiento del algoritmo se incrementa, aunque en algunos casos la resolución del problema utilizando este paradigma se vuelve más compleja.
+\\
+\\
+Por último, esta práctica también me sirvió para darme cuenta que el algoritmo de Strassen tendrá un rendimiento computacional mayor cuando la dimensión de las matrices sea grande, puesto que en casos en los que la dimensión es relativamente pequeña su rendimiento(tiempo computacional) es muy parecido al rendimiento que tiene el algoritmo estándar para la multiplicación de matrices.   
+\subsection{\textbf{Conclusión Alberto Aacini Osornio Zambrano}}
+El algoritmo de strassen es un método para multiplicar matrices , que busca reducir el numero de operaciones , muy similar a lo que hace el método karatsuba  para multiplicar números muy grandes. Aun que la complejidad del algoritmo no se ve aparentemente  muy  mejorada , podemos ver que al hacerse las matrices cada ves mas grandes, se ve una clara diferencia. 
+
+\section{Bibliografía}
+
+[1] J. C. Ojeda. Introducción al Análisis y al Diseño de Algoritmos. Primera edición. México DF: Publidisa Mexicana ,2014. 
+
+
+
+
+
+\end{document}
+
+
+%--Comando para agregar una subsección--%
+
+%\subsection{\textbf{Nombredelasubsección}}
+
+%--Código para agregar una imágen centrada con pocición forazada y con descripción general y descripción especifíca--%
